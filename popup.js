@@ -1,33 +1,31 @@
 
 
-chrome.tabs.query({active: true, currentWindow: true}, function(arrayOfTabs) {
-
-     // since only one tab should be active and in the current window at once
-     // the return variable should only have one entry
-     var activeTab = arrayOfTabs[0];
-    
-     
-     getLink(activeTab.url);
-  });
+chrome.tabs.query({ active: true, currentWindow: true }, function (arrayOfTabs) {
+    var activeTab = arrayOfTabs[0];
+    getLink(activeTab.url);
+});
 
 
-        function getLink(urlRTP)
-        {
-            var url = 'https://rtp-downloader.herokuapp.com/api?link=' + encodeURIComponent(urlRTP);
+function getLink(urlRTP) {
+    var url = 'https://rtp-downloader.herokuapp.com/api?link=' + encodeURIComponent(urlRTP);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) { 
+            var div = document.querySelector('#hi');
+            var link = JSON.parse(xhr.responseText).urlVideo;
+             var anchor = document.createElement('a');
+             anchor.href= link;
+             anchor.setAttribute('target', '_blank');
+             anchor.textContent= link;
+            while (div.hasChildNodes()) {
+                 div.removeChild(div.lastChild) ;
+                }
+            div.appendChild(anchor);
 
-        //var div = document.querySelector('#hi');
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
+        }
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 ) { //&& xhr.status === 200
-                var div = document.querySelector('#hi');
-                var link= JSON.parse(xhr.responseText).urlVideo;
-                div.innerHTML = '<a href="' +link+'" target="_blank">'+link+'</a>';
-                 
-            }
+    };
 
-        };
-
-        xhr.send() ;
-    }
+    xhr.send();
+}
