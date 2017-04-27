@@ -11,17 +11,19 @@ function getLink(urlRTP) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) { 
+        if (xhr.readyState == 4) {
             var div = document.querySelector('#hi');
             var link = JSON.parse(xhr.responseText).urlVideo;
-             var anchor = document.createElement('a');
-             anchor.href= link;
-             anchor.setAttribute('target', '_blank');
-             anchor.textContent= link;
-            while (div.hasChildNodes()) {
-                 div.removeChild(div.lastChild) ;
+            if (link.startsWith('http')) {
+                var anchor = document.createElement('a');
+                anchor.href = link;
+                anchor.setAttribute('target', '_blank');
+                anchor.textContent = link;
+                while (div.hasChildNodes()) {
+                    div.removeChild(div.lastChild);
                 }
-            div.appendChild(anchor);
+                div.appendChild(anchor);
+            }
 
         }
 
